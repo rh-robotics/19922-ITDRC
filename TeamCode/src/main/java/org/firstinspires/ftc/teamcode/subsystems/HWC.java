@@ -2,10 +2,11 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -16,10 +17,21 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class HWC {
     // Declare empty variables for robot hardware
     public DcMotorEx leftFront, rightFront, leftRear, rightRear;
+    public Servo specimenServo;
+    public CRServo intakeServo;
+
+    // ------ Declare Gamepads ------ //
+    public Gamepad currentGamepad1 = new Gamepad();
+    public Gamepad currentGamepad2 = new Gamepad();
+    public Gamepad previousGamepad1 = new Gamepad();
+    public Gamepad previousGamepad2 = new Gamepad();
+
+    // ------ Time Variables ------ //
+    public ElapsedTime time = new ElapsedTime();
+
 
     // Other Variables
     Telemetry telemetry;
-    ElapsedTime time = new ElapsedTime();
 
     /**
      * Constructor for HWC, declares all hardware components
@@ -43,18 +55,8 @@ public class HWC {
         leftRear.setDirection(DcMotorEx.Direction.FORWARD);
         rightRear.setDirection(DcMotorEx.Direction.FORWARD);
 
-        // Set motors to break when power = 0
-        // TODO: REMOVE IF THIS BEHAVIOUR IS NOT DESIRED ON NEW BOT
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Run motors using encoder, so that we can move accurately.
-        leftFront.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        leftRear.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        // Declare Servos
+        specimenServo = hardwareMap.get(Servo.class, "specimenServo");
+        intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
     }
-    // TODO: ADD ANY HARDWARE RELATED FUNCTIONS BELOW
 }
