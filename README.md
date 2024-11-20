@@ -34,9 +34,9 @@ Repository containing code for FTC Team 19922 Iron Lions' INTO THE DEEP Season!
 | **Digital 2:3** |                          |                              |
 | **Digital 4:5** |                          |                              |
 | **Digital 6:7** |                          |                              |
-| **Servo 0**     |                          |                              |
-| **Servo 1**     |                          |                              |
-| **Servo 2**     |                          |                              |
+| **Servo 0**     | `intakeBeltServo`        |                              |
+| **Servo 1**     | `intakeWheelServo`       |                              |
+| **Servo 2**     | `specimenServo`          |                              |
 | **Servo 3**     |                          |                              |
 | **Servo 4**     |                          |                              |
 | **Servo 5**     |                          |                              |

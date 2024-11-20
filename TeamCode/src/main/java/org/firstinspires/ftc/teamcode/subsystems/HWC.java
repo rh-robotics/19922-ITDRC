@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,34 +12,26 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-/**
- * Stores and Declares all hardware devices &amp; related methods
- */
 public class HWC {
     // Declare empty variables for robot hardware
     public DcMotorEx leftFront, rightFront, leftRear, rightRear;
     public Servo specimenServo;
-    public CRServo intakeServo;
+    public CRServo intakeBeltServo, intakeWheelServo;
+    public ColorRangeSensor intakeColorSensor;
 
-    // ------ Declare Gamepads ------ //
+    // Declare Gamepads
     public Gamepad currentGamepad1 = new Gamepad();
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad1 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
 
-    // ------ Time Variables ------ //
+    // Time Variables
     public ElapsedTime time = new ElapsedTime();
-
 
     // Other Variables
     Telemetry telemetry;
 
-    /**
-     * Constructor for HWC, declares all hardware components
-     *
-     * @param hardwareMap HardwareMap - Used to retrieve hardware devices
-     * @param telemetry   Telemetry - Used to add telemetry to driver hub
-     */
+    // Constructor
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
@@ -57,6 +50,10 @@ public class HWC {
 
         // Declare Servos
         specimenServo = hardwareMap.get(Servo.class, "specimenServo");
-        intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
+        intakeBeltServo = hardwareMap.get(CRServo.class, "intakeBeltServo");
+        intakeWheelServo = hardwareMap.get(CRServo.class, "intakeWheelServo");
+
+        // Declare Sensors
+        intakeColorSensor = hardwareMap.get(ColorRangeSensor.class, "intakeColorSensor");
     }
 }
