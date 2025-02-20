@@ -2,39 +2,56 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import androidx.annotation.NonNull;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.subsystems.pid.PIDComponent;
+import org.firstinspires.ftc.teamcode.subsystems.pid.components.MotorPIDComponent;
+import org.firstinspires.ftc.teamcode.subsystems.pid.components.ServoPIDComponent;
 
 public class HWC {
-    // Declare empty variables for robot hardware
-    public DcMotorEx leftFront, rightFront, leftRear, rightRear, turretMotor, linearActuatorMotor, slideLeftMotor, slideRightMotor;
-    public Servo specimenClawServo, swingServoLeft, swingServoRight, intakeVerticalJointServo;
-    public CRServo intakeBeltServo, intakeWheelServo, swingExtensionLeft, swingExtensionRight;
-    public ColorRangeSensor intakeColorSensor, specimenColorSensor;
+    // Motors
+    public DcMotorEx leftFront, rightFront, leftRear, rightRear;
+    public DcMotorEx turretMotor, linearActuatorMotor, vSlideLeftMotor, vSlideRightMotor;
 
-    // Declare PID Components
-    public PIDComponent slideLeftComponent, slideRightComponent, turretComponent;
+    // Motor PID Components
+    public MotorPIDComponent vSlideLeftComponent, vSlideRightComponent, turretComponent;
 
-    // Declare Gamepads
+    // Servos
+    public Servo specimenClawServo, bucketServo, swingServoLeft, swingServoRight;
+
+    // CR Servos
+    public CRServo intakeServo1, intakeServo2, hSlideLeftServo, hSlideRightServo;
+
+    // Axon AnalogInput Encoders
+    public AnalogInput hSlideLeftEncoder, hSlideRightEncoder;
+
+    // Servo PID Components
+    public ServoPIDComponent hSlideLeftComponent, hSlideRightComponent;
+
+    // Sensors
+    public ColorRangeSensor intakeColorSensor;
+
+    // Gamepads
     public Gamepad currentGamepad1 = new Gamepad();
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad1 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
 
-    // Time Variables
+    // Time
     public ElapsedTime time = new ElapsedTime();
 
     // Position Variables
-    public static int[] slidePositions = {0, -1, -2}; // TODO: Update Values With Actual Slide Positions
-    public static int[] turretPositions = {0, -1}; // TODO: Update Values With Actual Turret Positions
+    public static int[] vSlidePositions = {0, -1500, -5000, -8000, -12000}; // (In order): Zero, Low Chamber, Side Panel Clearance, High Chamber, Low Basket, High Basket
+    public static int[] hSlidePositions = {0, 0}; // TODO: Update with actual values
+    public static int[] turretPositions = {350, 0, -350};
 
     // Other Variables
     Telemetry telemetry;
@@ -43,23 +60,56 @@ public class HWC {
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
-        // Drivetrain Motors (435 RPM GoBilda REX Shaft Motors)
+        // Motors
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-
-        // Other Motors
-        turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor"); //
+        turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor"); // 117 RPM
         linearActuatorMotor = hardwareMap.get(DcMotorEx.class, "linearActuatorMotor");
-        slideLeftMotor = hardwareMap.get(DcMotorEx.class, "slideLeftMotor"); // 223 RPM - 751.8 PPR
-        slideRightMotor = hardwareMap.get(DcMotorEx.class, "slideRightMotor"); // 223 RPM - 751.8 PPR
+        vSlideLeftMotor = hardwareMap.get(DcMotorEx.class, "vSlideLeftMotor"); // 223 RPM - 751.8 PPR
+        vSlideRightMotor = hardwareMap.get(DcMotorEx.class, "vSlideRightMotor"); // 223 RPM - 751.8 PPR
+
+        // Motor PID Components
+        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, 751.8, 0.003, 0, 0, 0.1);
+        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, 751.8, 0.003, 0, 0, 0.1);
+        turretComponent = new MotorPIDComponent(turretMotor, .4,1425.1, 0.003, 0, 0.0002, 0.0001);
+
+        // Analog Inputs
+        hSlideLeftEncoder = hardwareMap.get(AnalogInput.class, "hSlideLeftEncoder");
+        hSlideRightEncoder = hardwareMap.get(AnalogInput.class, "hSlideRightEncoder");
+
+        // CRServos
+        intakeServo1 = hardwareMap.get(CRServo.class, "intakeServo1");
+        intakeServo2 = hardwareMap.get(CRServo.class, "intakeServo2");
+        hSlideLeftServo = hardwareMap.get(CRServo.class, "hSlideLeftServo");
+        hSlideRightServo = hardwareMap.get(CRServo.class, "hSlideRightServo");
+
+        // Servo PID Components
+//        hSlideLeftComponent = new ServoPIDComponent(hSlideLeftServo, hSlideLeftEncoder, 0.1, 0, 0, 0, 0); // TODO: Tune Values & Update Ticks Per Rotation
+//        hSlideRightComponent = new ServoPIDComponent(hSlideRightServo, hSlideRightEncoder, 0.1, 0, 0, 0, 0); // TODO: Tune Values & Update Ticks Per Rotation
+
+        // Servos
+        specimenClawServo = hardwareMap.get(Servo.class, "specimenClawServo");
+        bucketServo = hardwareMap.get(Servo.class, "bucketServo");
+        swingServoLeft = hardwareMap.get(Servo.class, "swingServoLeft");
+        swingServoRight = hardwareMap.get(Servo.class, "swingServoRight");
+
+        // Sensors
+        intakeColorSensor = hardwareMap.get(ColorRangeSensor.class, "intakeColorSensor");
 
         // Set the direction of motors
         leftFront.setDirection(DcMotorEx.Direction.REVERSE);
         rightFront.setDirection(DcMotorEx.Direction.REVERSE);
-        leftRear.setDirection(DcMotorEx.Direction.REVERSE);
+        leftRear.setDirection(DcMotorEx.Direction.FORWARD);
         rightRear.setDirection(DcMotorEx.Direction.REVERSE);
+        vSlideRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        // Reset motor encoders
+        vSlideRightMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        vSlideLeftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        linearActuatorMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         // Run ALL motors without encoders
         leftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
@@ -68,25 +118,7 @@ public class HWC {
         rightRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         turretMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         linearActuatorMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        slideLeftMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        slideRightMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-
-        // PID Components
-        slideLeftComponent = new PIDComponent(slideLeftMotor, 751.8, 0.1, 0, 0, 0); // TODO: Tune Values
-        slideRightComponent = new PIDComponent(slideRightMotor, 751.8, 0.1, 0, 0, 0); // TODO: Tune Values
-        turretComponent = new PIDComponent(turretMotor, 0, 0.1, 0, 0, 0); // TODO: Tune Values & Update Ticks Per Rotation
-
-        // Declare Servos
-        specimenClawServo = hardwareMap.get(Servo.class, "specimenClawServo");
-        swingServoLeft = hardwareMap.get(Servo.class, "swingServoLeft");
-        swingServoRight = hardwareMap.get(Servo.class, "swingServoRight");
-        intakeBeltServo = hardwareMap.get(CRServo.class, "intakeBeltServo");
-        intakeWheelServo = hardwareMap.get(CRServo.class, "intakeWheelServo");
-        swingExtensionLeft = hardwareMap.get(CRServo.class, "swingExtensionLeft");
-        swingExtensionRight = hardwareMap.get(CRServo.class, "swingExtensionRight");
-
-        // Declare Sensors
-        intakeColorSensor = hardwareMap.get(ColorRangeSensor.class, "intakeColorSensor");
-        specimenColorSensor = hardwareMap.get(ColorRangeSensor.class, "specimenColorSensor");
+        vSlideLeftMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        vSlideRightMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     }
 }
