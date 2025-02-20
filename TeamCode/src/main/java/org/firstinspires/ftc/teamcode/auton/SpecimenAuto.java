@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.subsystems.HWC;
 
 @Autonomous(group = "Final Autons", name = "5 Specimen")
-public class specimenAuto extends OpMode {
+public class SpecimenAuto extends OpMode {
     private enum State {
         START, SCORING, MOVING_PRESETS, PICK_UP_SPECIMEN, PARK, STOP;
     }

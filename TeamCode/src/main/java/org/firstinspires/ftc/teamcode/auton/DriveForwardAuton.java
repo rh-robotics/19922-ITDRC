@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous(name = "Drive Forward Auton")
-public class driveForwardAuton extends OpMode {
+public class DriveForwardAuton extends OpMode {
     DcMotor leftFront;
     DcMotor rightFront;
     DcMotor leftBack;
