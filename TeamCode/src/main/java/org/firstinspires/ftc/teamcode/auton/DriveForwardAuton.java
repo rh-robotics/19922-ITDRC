@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name = "Drive Forward Auton")
+@Autonomous(name = "Drive Forward Auton", preselectTeleOp="PrimaryTeleOp")
 public class DriveForwardAuton extends OpMode {
     DcMotor leftFront;
     DcMotor rightFront;
