@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.testFiles;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+@TeleOp(name = "Motor Test", group = "Test OpModes")
 public class MotorTest extends OpMode {
     DcMotor motor;
 
