@@ -11,8 +11,10 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.subsystems.roadrunner.drive.SampleMecanumDrive;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.subsystems.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.pid.components.MotorPIDComponent;
 import org.firstinspires.ftc.teamcode.subsystems.pid.components.ServoPIDComponent;
 
@@ -55,6 +57,7 @@ public class HWC {
 
     // Other Variables
     Telemetry telemetry;
+    public SampleMecanumDrive drive;
 
     // Constructor
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
