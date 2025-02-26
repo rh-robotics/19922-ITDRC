@@ -38,6 +38,8 @@ public class PrimaryTeleOp extends OpMode {
 
     private boolean testingMode = false;
 
+    private boolean cautious = false;
+
     @Override
     public void init() {
         // Update Telemetry to show that the robot is initializing
@@ -143,6 +145,9 @@ public class PrimaryTeleOp extends OpMode {
         // Control Driving
         controlDrive();
 
+        // Sprint button
+        controlCaution();
+
         // Control Intake
         controlAllowedPickupState();
 //        controlHSlides();
@@ -162,6 +167,22 @@ public class PrimaryTeleOp extends OpMode {
     private void updateGamepads() {
         robot.previousGamepad1.copy(robot.currentGamepad1);
         robot.currentGamepad1.copy(gamepad1);
+    }
+
+    private void controlCaution() {
+        if (robot.currentGamepad1.options && !robot.previousGamepad1.options) {
+            cautious = !cautious;
+        }
+        if (cautious) {
+            strafeSpeed = 0.25;
+            driveSpeed = 0.25;
+            turnSpeed = 0.25;
+        }
+        else {
+            strafeSpeed = 0.5;
+            driveSpeed = 0.5;
+            turnSpeed = 0.5;
+        }
     }
 
     private void controlDrive() {
