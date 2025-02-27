@@ -33,11 +33,6 @@ public class ServoPIDComponent {
         target = newTarget;
     }
 
-    public void incrementTarget(double increment) {
-        target += increment;
-        moveUsingPID();
-    }
-
     public void moveUsingPID() {
         controller.reset();
         double servoPos = analogInput.getVoltage() / 3.3 * 360;
@@ -46,9 +41,5 @@ public class ServoPIDComponent {
         double power = pid + ff;
 
         servo.setPower(power);
-    }
-
-    public boolean closeEnough(int range) {
-        return (target - range <= analogInput.getVoltage()) && (target + range >= (analogInput.getVoltage() / 3.3 * 360));
     }
 }

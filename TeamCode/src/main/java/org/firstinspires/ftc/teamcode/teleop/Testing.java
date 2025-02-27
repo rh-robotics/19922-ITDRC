@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,16 +9,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.HWC;
 
+@Config
 @TeleOp(name = "Testing", group = "Testing")
 public class Testing extends OpMode {
     HWC robot;
-    Servo servo;
-
-    double servoPos = 0;
+    public static double leftPos, rightPos = 0;
 
     @Override
     public void init() {
-        servo = robot.bucketServo;
+        robot = new HWC(hardwareMap, telemetry);
     }
 
     @Override
@@ -26,15 +26,14 @@ public class Testing extends OpMode {
         robot.previousGamepad1.copy(robot.currentGamepad1);
         robot.currentGamepad1.copy(gamepad1);
 
-        if (robot.currentGamepad1.dpad_up && !robot.previousGamepad1.dpad_up) {
-            servoPos += 0.1;
-        } else if (robot.currentGamepad1.dpad_down && !robot.previousGamepad1.dpad_down) {
-            servoPos -= 0.1;
+        if (robot.currentGamepad1.cross && !robot.previousGamepad1.cross) {
+            robot.hSlideLeftServo.setPosition(leftPos);
+            robot.hSlideRightServo.setPosition(rightPos);
         }
 
-        servo.setPosition(servoPos);
+        // Telemetry
+        telemetry.addData("Left Slide Servo Position", robot.hSlideLeftServo.getPosition());
+        telemetry.addData("Right Slide Servo Position", robot.hSlideRightServo.getPosition());
 
-        telemetry.addData("Servo Position", servoPos);
-        telemetry.update();
     }
 }

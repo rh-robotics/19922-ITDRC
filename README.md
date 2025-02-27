@@ -17,7 +17,7 @@ Repository containing code for FTC Team 19922 Iron Lions' INTO THE DEEP Season!
 | **Motor 0**     | `rightFront`                               | GoBilda 5203 Series - 435 RPM YellowJacket |
 | **Encoder 0**   |                                            |                                            |
 | **Motor 1**     | `rightRear`                                | GoBilda 5203 Series - 435 RPM YellowJacket |
-| **Encoder 2**   | `odoRight`                                 |                                            |
+| **Encoder 1**   | `odoRight`                                 |                                            |
 | **Motor 2**     | `leftFront`                                | GoBilda 5203 Series - 435 RPM YellowJacket |
 | **Encoder 2**   | `odoFront`                                 |                                            |
 | **Motor 3**     | `leftRear`                                 | GoBilda 5203 Series - 435 RPM YellowJacket |
@@ -36,12 +36,12 @@ Repository containing code for FTC Team 19922 Iron Lions' INTO THE DEEP Season!
 | **Digital 2:3** |                                            |                                            |
 | **Digital 4:5** |                                            |                                            |
 | **Digital 6:7** |                                            |                                            |
-| **Servo 0**     | `swingServoLeft`                           | GoBilda Dual Mode Torque Servo (Position)  |
-| **Servo 1**     | `swingServoRight`                          | GoBilda Dual Mode Torque Servo (Position)  |
-| **Servo 2**     | `intakeServo1`                             | GoBilda Dual Mode Speed Servo (CR)         |
-| **Servo 3**     | `intakeServo2`                             | GoBilda Dual Mode Speed Servo (CR)         |
-| **Servo 4**     | `hSlideLeftServo`                          | Axon Max Servo  (CR)                       |
-| **Servo 5**     | `hSlideRightServo`                         | Axon Max Servo  (CR)                       |
+| **Servo 0**     | `intakeServo1`                             | GoBilda Dual Mode Speed Servo (CR)         |
+| **Servo 1**     | `intakeServo2`                             | GoBilda Dual Mode Speed Servo (CR)         |
+| **Servo 2**     | `hSlideLeftServo`                          | GoBilda 5-Turn Dual Mode Speed Servo (CR)  |
+| **Servo 3**     | `hSlideRightServo`                         | GoBilda 5-Turn Dual Mode Speed Servo (CR)  |
+| **Servo 4**     | `swingServoRight`                          | GoBilda Dual Mode Torque Servo (Position)  |
+| **Servo 5**     | `swingServoLeft`                           | GoBilda Dual Mode Torque Servo (Position)  |
 | **UART 1**      |                                            |                                            |
 | **UART 2**      |                                            |                                            |
 | **UART 3**      |                                            |                                            |
