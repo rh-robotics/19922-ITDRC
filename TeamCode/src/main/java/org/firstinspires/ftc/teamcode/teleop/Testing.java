@@ -32,8 +32,8 @@ public class Testing extends OpMode {
         }
 
         // Telemetry
-        telemetry.addData("Swing Left Position", robot.intakeServo1.getPower());
-        telemetry.addData("Swing Right Position", robot.intakeServo2.getPower());
+        telemetry.addData("Left Slide Servo Position", robot.hSlideLeftServo.getPosition());
+        telemetry.addData("Right Slide Servo Position", robot.hSlideRightServo.getPosition());
 
     }
 }

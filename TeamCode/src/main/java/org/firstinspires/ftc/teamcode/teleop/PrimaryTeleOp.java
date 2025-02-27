@@ -145,7 +145,6 @@ public class PrimaryTeleOp extends OpMode {
 
         // Control Intake
         controlAllowedPickupState();
-//        manualControlHSlides();
         controlIntake();
         controlIntakeSwing();
 
@@ -407,9 +406,9 @@ public class PrimaryTeleOp extends OpMode {
             telemetry.addLine();
             telemetry.addLine("| ---- EXTENSION ---- |");
             telemetry.addLine("> Extension Left Servo");
-//            telemetry.addData("    - Power", robot.hSlideLeftServo.getPower());
+            telemetry.addData("    - Position", robot.hSlideLeftServo.getPosition());
             telemetry.addLine("> Extension Right Servo");
-//            telemetry.addData("    - Power", robot.hSlideRightServo.getPower());
+            telemetry.addData("    - Position", robot.hSlideRightServo.getPosition());
             telemetry.addLine();
             telemetry.addLine("| ---- INTAKE ---- |");
             telemetry.addData("> Intake State: ", intakeState);

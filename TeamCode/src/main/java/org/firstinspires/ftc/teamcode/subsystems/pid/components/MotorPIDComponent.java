@@ -54,4 +54,8 @@ public class MotorPIDComponent {
 
         motor.setPower(power);
     }
+
+    public boolean closeEnough(int range) {
+        return (target - range <= motor.getCurrentPosition()) && (target + range >= motor.getCurrentPosition());
+    }
 }
