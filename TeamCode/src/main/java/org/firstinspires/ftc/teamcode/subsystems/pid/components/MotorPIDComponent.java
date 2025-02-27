@@ -35,18 +35,13 @@ public class MotorPIDComponent {
     public double getTicksPerDegree() {
         return ticks_per_degree;
     }
-
+    
     public double getTarget() {
         return target;
     }
 
     public void setTarget(double newTarget) {
         target = newTarget;
-    }
-
-    public void incrementTarget(double increment) {
-        target += increment;
-        moveUsingPID();
     }
 
     public void moveUsingPID() {
@@ -58,9 +53,5 @@ public class MotorPIDComponent {
         double power = Range.clip((pid + ff), -power_clip_range, power_clip_range);
 
         motor.setPower(power);
-    }
-
-    public boolean closeEnough(int range) {
-        return (target - range <= motor.getCurrentPosition()) && (target + range >= motor.getCurrentPosition());
     }
 }

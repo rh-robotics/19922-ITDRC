@@ -27,16 +27,10 @@ public class HWC {
     public MotorPIDComponent vSlideLeftComponent, vSlideRightComponent, turretComponent;
 
     // Servos
-    public Servo specimenClawServo, bucketServo, swingServoLeft, swingServoRight;
+    public Servo specimenClawServo, bucketServo, swingServoLeft, swingServoRight, hSlideLeftServo, hSlideRightServo;;
 
     // CR Servos
-    public CRServo intakeServo1, intakeServo2, hSlideLeftServo, hSlideRightServo;
-
-    // Axon AnalogInput Encoders
-    public AnalogInput hSlideLeftEncoder, hSlideRightEncoder;
-
-    // Servo PID Components
-    public ServoPIDComponent hSlideLeftComponent, hSlideRightComponent;
+    public CRServo intakeServo1, intakeServo2;
 
     // Sensors
     public ColorRangeSensor intakeColorSensor;
@@ -51,7 +45,7 @@ public class HWC {
     public ElapsedTime time = new ElapsedTime();
 
     // Position Variables
-    public static int[] vSlidePositions = {0, -1500, -5000, -8000, -12000}; // (In order): Zero, Low Chamber, Side Panel Clearance, High Chamber, Low Basket, High Basket
+    public static int[] vSlidePositions = {0, -600, -1300, -1850, -2800, }; // (In order): Zero, Low Chamber, Side Panel Clearance, High Chamber, Low Basket, High Basket
     public static int[] hSlidePositions = {0, 0}; // TODO: Update with actual values
     public static int[] turretPositions = {350, 0, -350};
 
@@ -74,29 +68,21 @@ public class HWC {
         vSlideRightMotor = hardwareMap.get(DcMotorEx.class, "vSlideRightMotor"); // 223 RPM - 751.8 PPR
 
         // Motor PID Components
-        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, 751.8, 0.003, 0, 0, 0.1);
-        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, 751.8, 0.003, 0, 0, 0.1);
+        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, 751.8, 0.004, 0, 0, 0);
+        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, 751.8, 0.004, 0, 0, 0);
         turretComponent = new MotorPIDComponent(turretMotor, .4,1425.1, 0.003, 0, 0.0002, 0.0001);
-
-        // Analog Inputs
-        hSlideLeftEncoder = hardwareMap.get(AnalogInput.class, "hSlideLeftEncoder");
-        hSlideRightEncoder = hardwareMap.get(AnalogInput.class, "hSlideRightEncoder");
 
         // CRServos
         intakeServo1 = hardwareMap.get(CRServo.class, "intakeServo1");
         intakeServo2 = hardwareMap.get(CRServo.class, "intakeServo2");
-        hSlideLeftServo = hardwareMap.get(CRServo.class, "hSlideLeftServo");
-        hSlideRightServo = hardwareMap.get(CRServo.class, "hSlideRightServo");
-
-        // Servo PID Components
-//        hSlideLeftComponent = new ServoPIDComponent(hSlideLeftServo, hSlideLeftEncoder, 0.1, 0, 0, 0, 0); // TODO: Tune Values & Update Ticks Per Rotation
-//        hSlideRightComponent = new ServoPIDComponent(hSlideRightServo, hSlideRightEncoder, 0.1, 0, 0, 0, 0); // TODO: Tune Values & Update Ticks Per Rotation
 
         // Servos
         specimenClawServo = hardwareMap.get(Servo.class, "specimenClawServo");
         bucketServo = hardwareMap.get(Servo.class, "bucketServo");
         swingServoLeft = hardwareMap.get(Servo.class, "swingServoLeft");
         swingServoRight = hardwareMap.get(Servo.class, "swingServoRight");
+        hSlideLeftServo = hardwareMap.get(Servo.class, "hSlideLeftServo");
+        hSlideRightServo = hardwareMap.get(Servo.class, "hSlideRightServo");
 
         // Sensors
         intakeColorSensor = hardwareMap.get(ColorRangeSensor.class, "intakeColorSensor");
