@@ -19,11 +19,16 @@ public class SpecimenAuto extends OpMode {
     private int specimensScored = 0;
     private boolean delivered = false;
 
-    private Trajectory moveForwardSpecimen, scoreSpecimenFromPickUp, scoreSpecimenFromStart, moveAllPreSets, pickUpFromScore, pickUpFromMove, park;
+    private Trajectory scoreSpecimenFromPickUp, scoreSpecimenFromStart;
+    private Trajectory firstPreset1, firstPreset2, firstPreset3, secondPreset1, secondPreset2, secondPreset3, thirdPreset1, thirdPreset2, thirdPreset3, goToPresets;
+    private Trajectory pickUpFromScore, pickUpFromMove, moveForwardSpecimen;
 
     private String activeTrajectory = "";
 
     private HWC robot;
+
+    private boolean specimenInPossession = true;
+    private boolean robotInPosition = false;
 
     private final Pose2d START_POSE_BLUE = new Pose2d(-14.5, 62, Math.toRadians(90.00));
 
@@ -31,47 +36,60 @@ public class SpecimenAuto extends OpMode {
     public void init() {
         robot = new HWC(hardwareMap, telemetry);
 
+        robot.drive.setPoseEstimate(START_POSE_BLUE);
+
         scoreSpecimenFromStart = robot.drive.trajectoryBuilder(START_POSE_BLUE)
-            .splineTo(new Vector2d(-36, 35), Math.toRadians(270))
-            .build();
+                .lineTo(new Vector2d(0, 35))
+                .build();
 
         moveForwardSpecimen = robot.drive.trajectoryBuilder(scoreSpecimenFromStart.end())
+                .lineTo(new Vector2d(0, 31))
+                .build();
+
+        goToPresets = robot.drive.trajectoryBuilder(moveForwardSpecimen.end())
                 .splineTo(new Vector2d(-36, 35), Math.toRadians(270))
                 .build();
 
-        moveAllPreSets = robot.drive.trajectoryBuilder(scoreSpecimenFromStart.end())
-            .splineToConstantHeading(new Vector2d(-36, 20), Math.toRadians(270))
-            .splineToConstantHeading(new Vector2d(-42, 13), Math.toRadians(270))
-            .splineToConstantHeading(new Vector2d(-45, 50), Math.toRadians(270))
-
-            .splineToConstantHeading(new Vector2d(-47, 20), Math.toRadians(270))
-            .splineToConstantHeading(new Vector2d(-50, 13), Math.toRadians(270))
-            .splineToConstantHeading(new Vector2d(-55, 50), Math.toRadians(270))
-
-            .splineToConstantHeading(new Vector2d(-57, 20), Math.toRadians(270))
-            .splineToConstantHeading(new Vector2d(-60, 13), Math.toRadians(270))
-            .splineToConstantHeading(new Vector2d(-60, 50), Math.toRadians(270))
-            .build();
-
-        pickUpFromMove = robot.drive.trajectoryBuilder(moveAllPreSets.end())
-            .lineToConstantHeading(new Vector2d(-45, 62))
-            .build();
-
-        scoreSpecimenFromPickUp = robot.drive.trajectoryBuilder(pickUpFromMove.end())
-            .lineToConstantHeading(new Vector2d(0, 35))
-            .build();
-
-        pickUpFromScore = robot.drive.trajectoryBuilder(scoreSpecimenFromPickUp.end())
-                .lineToConstantHeading(new Vector2d(-45, 62))
+        firstPreset1 = robot.drive.trajectoryBuilder(goToPresets.end())
+                .splineToConstantHeading(new Vector2d(-36, 20), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(-42, 13), Math.toRadians(270))
                 .build();
 
-        park = robot.drive.trajectoryBuilder(scoreSpecimenFromPickUp.end())
-            .lineToConstantHeading(new Vector2d(-45, 62))
-            .build();
+        firstPreset2 = robot.drive.trajectoryBuilder(firstPreset1.end())
+                .lineTo(new Vector2d(-45, 60))
+                .build();
+
+        secondPreset1 = robot.drive.trajectoryBuilder(firstPreset1.end())
+                .splineToConstantHeading(new Vector2d(-47, 20), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(-50, 13), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(-55, 50), Math.toRadians(270))
+                .build();
+
+        thirdPreset1 = robot.drive.trajectoryBuilder(secondPreset1.end())
+                .splineToConstantHeading(new Vector2d(-57, 20), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(-60, 13), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(-60, 50), Math.toRadians(270))
+                .build();
+
+        pickUpFromMove = robot.drive.trajectoryBuilder(thirdPreset1.end())
+                .lineToConstantHeading(new Vector2d(-45, 60))
+                .build();
+
+        scoreSpecimenFromPickUp = robot.drive.trajectoryBuilder(pickUpFromMove.end())
+                .lineToLinearHeading(new Pose2d(0, 35, Math.toRadians(90)))
+                .build();
+
+        pickUpFromScore = robot.drive.trajectoryBuilder(moveForwardSpecimen.end())
+                .lineToLinearHeading(new Pose2d(-45, 60, Math.toRadians(270)))
+                .build();
     }
 
     @Override
     public void loop() {
+        telemetry.addData("Current State: ", state);
+        telemetry.addData("Robot In Position: ", robotInPosition);
+        telemetry.addData("Specimen In Possession: ", specimenInPossession);
+
         switch (state) {
             case START:
                 moveToScoreSpecimen();
@@ -89,57 +107,72 @@ public class SpecimenAuto extends OpMode {
     }
 
     private void moveToPickUpSpecimen() {
-        // specimensScored should be 1 if coming from moving presets and larger than that otherwise.
-        if (specimensScored == 1) {
-            robot.drive.followTrajectory(pickUpFromMove);
-        } else {
-            robot.drive.followTrajectory(pickUpFromScore);
+        if (!robotInPosition) {
+            // specimensScored should be 1 if coming from moving presets and larger than that otherwise.
+            if (specimensScored == 1) {
+                robot.drive.followTrajectory(pickUpFromMove);
+                robotInPosition = true;
+            } else {
+                robot.drive.followTrajectory(pickUpFromScore);
+                robotInPosition = true;
+            }
         }
 
-        pickUpSpecimen();
-        state = State.SCORING;
+        pickUpSpecimen(); // this will loop
+
+        if (specimenInPossession) {
+            state = State.SCORING;
+            robotInPosition = false;
+        }
     }
 
     private void moveToScoreSpecimen() {
-        // Triggered by both the START state and the SCORING state.
-        if (state == State.START) {
-            robot.drive.followTrajectoryAsync(scoreSpecimenFromStart);
-            activeTrajectory = "scoreSpecimenFromStart";
-        } else { // state = State.SCORING
-            robot.drive.followTrajectoryAsync(scoreSpecimenFromPickUp);
-            activeTrajectory = "scoreSpecimenFromStart";
+        if (!robotInPosition) {
+            // Triggered by both the START state and the SCORING state.
+            if (state == State.START) {
+                robot.drive.followTrajectory(scoreSpecimenFromStart);
+                robot.drive.followTrajectory(moveForwardSpecimen);
+                robotInPosition = true;
+            } else { // state = State.SCORING
+                robot.drive.followTrajectory(scoreSpecimenFromPickUp);
+                robot.drive.followTrajectory(moveForwardSpecimen);
+                robotInPosition = true;
+            }
         }
 
-        // Switch to next state once done
-        if (!robot.drive.isBusy()) {
-            if (!delivered) {
-                scoreSpecimen();
-                specimensScored ++;
-                delivered = true; // switch back to false when we switch into to the SCORING state
-            }
-
+        if (specimenInPossession) {
+            scoreSpecimen(); // this will loop
+        } else {
             if (state == State.START) {
                 state = State.MOVING_PRESETS;
             } else if (state == State.SCORING) {
-                if (specimensScored < 5) {
+                if (specimensScored < 3) {
                     state = State.PICK_UP_SPECIMEN;
+                    robotInPosition = false;
                 } else {
+                    // Park
+                    robot.drive.followTrajectory(pickUpFromScore);
                     state = State.PARK;
+                    robotInPosition = false;
                 }
             }
         }
     }
 
     private void movePreSets() {
-        robot.drive.followTrajectory(moveAllPreSets);
+        robot.drive.followTrajectory(firstPreset1);
+        robot.drive.followTrajectory(firstPreset2);
+
         state = State.PICK_UP_SPECIMEN;
+        robotInPosition = false;
     }
 
     private void scoreSpecimen() {
-        // TODO: implement this :)
+        specimensScored ++;
+        specimenInPossession = false;
     }
 
     private void pickUpSpecimen() {
-        // TODO: implement this :)
+        specimenInPossession = true;
     }
 }
