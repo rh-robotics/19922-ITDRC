@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,12 +10,10 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.subsystems.roadrunner.drive.SampleMecanumDrive;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.subsystems.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.pid.components.MotorPIDComponent;
-import org.firstinspires.ftc.teamcode.subsystems.pid.components.ServoPIDComponent;
+import org.firstinspires.ftc.teamcode.subsystems.roadrunner.drive.SampleMecanumDrive;
 
 public class HWC {
     // Motors
@@ -55,6 +52,8 @@ public class HWC {
 
     // Constructor
     public HWC(@NonNull HardwareMap hardwareMap, Telemetry telemetry) {
+        drive = new SampleMecanumDrive(hardwareMap);
+
         this.telemetry = telemetry;
 
         // Motors
@@ -68,8 +67,8 @@ public class HWC {
         vSlideRightMotor = hardwareMap.get(DcMotorEx.class, "vSlideRightMotor"); // 223 RPM - 751.8 PPR
 
         // Motor PID Components
-        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, 751.8, 0.004, 0, 0, 0);
-        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, 751.8, 0.004, 0, 0, 0);
+        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, .7,751.8, 0.004, 0, 0, 0);
+        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, .7, 751.8, 0.004, 0, 0, 0);
         turretComponent = new MotorPIDComponent(turretMotor, .4,1425.1, 0.003, 0, 0.0002, 0.0001);
 
         // CRServos
@@ -88,10 +87,10 @@ public class HWC {
         intakeColorSensor = hardwareMap.get(ColorRangeSensor.class, "intakeColorSensor");
 
         // Set the direction of motors
-        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
-        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
-        leftRear.setDirection(DcMotorEx.Direction.FORWARD);
-        rightRear.setDirection(DcMotorEx.Direction.REVERSE);
+//        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
+//        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
+//        leftRear.setDirection(DcMotorEx.Direction.FORWARD);
+//        rightRear.setDirection(DcMotorEx.Direction.REVERSE);
         vSlideRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Reset motor encoders

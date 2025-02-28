@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auton;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -42,7 +43,7 @@ public class OneSampleAuto extends OpMode {
 
         // Drive to deposit preloaded sample
         driveToDepositPreloadSample = drive.trajectoryBuilder(START_POSE_RED)
-                .back(10)
+                .lineTo(new Vector2d(0, 35))
                 .splineToLinearHeading(new Pose2d(-52, -52, Math.toRadians(225)), Math.toRadians(270))
                 .build();
 

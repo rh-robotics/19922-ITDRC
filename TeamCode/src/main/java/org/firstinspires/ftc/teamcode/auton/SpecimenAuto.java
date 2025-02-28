@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.subsystems.HWC;
 
 // lol I wish
-//@Autonomous(group = "Final Autons", name = "5 Specimen")
+@Autonomous(group = "Final Autons", name = "5 Specimen")
 public class SpecimenAuto extends OpMode {
     private enum State {
         START, SCORING, MOVING_PRESETS, PICK_UP_SPECIMEN, PARK, STOP;
@@ -19,10 +19,7 @@ public class SpecimenAuto extends OpMode {
     private int specimensScored = 0;
     private boolean delivered = false;
 
-    private Trajectory scoreSpecimenFromPickUp, scoreSpecimenFromStart;
-    private Trajectory moveAllPreSets;
-    private Trajectory pickUpFromScore, pickUpFromMove;
-    private Trajectory park;
+    private Trajectory moveForwardSpecimen, scoreSpecimenFromPickUp, scoreSpecimenFromStart, moveAllPreSets, pickUpFromScore, pickUpFromMove, park;
 
     private String activeTrajectory = "";
 
@@ -35,6 +32,10 @@ public class SpecimenAuto extends OpMode {
         robot = new HWC(hardwareMap, telemetry);
 
         scoreSpecimenFromStart = robot.drive.trajectoryBuilder(START_POSE_BLUE)
+            .splineTo(new Vector2d(-36, 35), Math.toRadians(270))
+            .build();
+
+        moveForwardSpecimen = robot.drive.trajectoryBuilder(scoreSpecimenFromStart.end())
                 .splineTo(new Vector2d(-36, 35), Math.toRadians(270))
                 .build();
 
