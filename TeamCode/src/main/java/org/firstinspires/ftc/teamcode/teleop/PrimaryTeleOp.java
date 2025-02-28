@@ -151,7 +151,7 @@ public class PrimaryTeleOp extends OpMode {
         // Control Intake
         controlAllowedPickupState();
         controlIntake();
-        controlIntakeSwing();
+        controlAutomatedExtension();
 
         // Control Turret
         controlTurret();
@@ -172,12 +172,12 @@ public class PrimaryTeleOp extends OpMode {
         if (robot.currentGamepad1.options && !robot.previousGamepad1.options) {
             cautious = !cautious;
         }
+
         if (cautious) {
             strafeSpeed = 0.25;
             driveSpeed = 0.25;
             turnSpeed = 0.25;
-        }
-        else {
+        } else {
             strafeSpeed = 0.5;
             driveSpeed = 0.5;
             turnSpeed = 0.5;
@@ -210,25 +210,6 @@ public class PrimaryTeleOp extends OpMode {
             } else if (robot.currentGamepad1.touchpad_finger_1_x > 0.66) {
                 allowedPickupState = AllowedPickupState.ALLIANCE_ONLY;
             }
-        }
-    }
-
-    private void controlIntakeSwing() {
-        if (robot.currentGamepad1.square && !robot.previousGamepad1.square) {
-            intakeSwingPosition = (intakeSwingPosition == IntakeSwingPosition.INTAKE) ? IntakeSwingPosition.TRANSFER : IntakeSwingPosition.INTAKE;
-        }
-
-        switch (intakeSwingPosition) {
-            case INTAKE:
-                robot.swingServoLeft.setPosition(0.5); // TODO: Test Value
-                robot.swingServoRight.setPosition(0.5);
-
-                break;
-            case TRANSFER:
-                robot.swingServoLeft.setPosition(0.15);
-                robot.swingServoRight.setPosition(0.85);
-
-                break;
         }
     }
 
@@ -282,6 +263,7 @@ public class PrimaryTeleOp extends OpMode {
                             } else {
                                 intakeState = IntakeState.STOPPED;
                             }
+
                             break;
                         case ALL:
                             if (blue > red && blue > green) {
@@ -289,6 +271,7 @@ public class PrimaryTeleOp extends OpMode {
                             } else {
                                 intakeState = IntakeState.STOPPED;
                             }
+
                             break;
                         case ALLIANCE_ONLY:
                             if (green > red && green > blue) {
@@ -298,6 +281,7 @@ public class PrimaryTeleOp extends OpMode {
                             } else {
                                 intakeState = IntakeState.STOPPED;
                             }
+
                             break;
                     }
                     break;
@@ -311,6 +295,7 @@ public class PrimaryTeleOp extends OpMode {
                             } else {
                                 intakeState = IntakeState.STOPPED;
                             }
+
                             break;
                         case ALL:
                             if (red > blue && red > green) {
@@ -318,6 +303,7 @@ public class PrimaryTeleOp extends OpMode {
                             } else {
                                 intakeState = IntakeState.STOPPED;
                             }
+
                             break;
                         case ALLIANCE_ONLY:
                             if (green > red && green > blue) {
@@ -327,10 +313,57 @@ public class PrimaryTeleOp extends OpMode {
                             } else {
                                 intakeState = IntakeState.STOPPED;
                             }
+
                             break;
                     }
                     break;
             }
+        }
+    }
+
+    private void controlAutomatedExtension() {
+        if (robot.currentGamepad1.dpad_right && !robot.previousGamepad1.dpad_right) {
+            // Increment Value
+            hSlideIndex++;
+
+            // If value is above max, don't increase
+            if (vSlideIndex > HWC.hSlideLeftPositions.length - 1) {
+                hSlideIndex = HWC.hSlideLeftPositions.length - 1;
+            }
+        } else if (robot.currentGamepad1.dpad_left && !robot.previousGamepad1.dpad_left) {
+            // Decrement Value
+            hSlideIndex--;
+
+            // If value is below min, don't decrease
+            if (vSlideIndex < 0) {
+                hSlideIndex = 0;
+            }
+        }
+
+        // If hSlideIndex is in an extended position, move intake swing down
+        if (hSlideIndex == 2 || hSlideIndex == 3) {
+            intakeSwingPosition = IntakeSwingPosition.INTAKE;
+        } else {
+            intakeSwingPosition = IntakeSwingPosition.TRANSFER;
+        }
+
+        handleIntakeSwing();
+        robot.hSlideLeftServo.setPosition(HWC.hSlideLeftPositions[hSlideIndex]);
+        robot.hSlideRightServo.setPosition(HWC.hSlideRightPositions[hSlideIndex]);
+    }
+
+    private void handleIntakeSwing() {
+        switch (intakeSwingPosition) {
+            case INTAKE:
+                robot.swingServoLeft.setPosition(0.5);
+                robot.swingServoRight.setPosition(0.5);
+
+                break;
+            case TRANSFER:
+                robot.swingServoLeft.setPosition(0.15);
+                robot.swingServoRight.setPosition(0.85);
+
+                break;
         }
     }
 
@@ -426,6 +459,7 @@ public class PrimaryTeleOp extends OpMode {
             telemetry.addLine();
             telemetry.addLine();
             telemetry.addLine("| ---- EXTENSION ---- |");
+            telemetry.addData("> Extension Left Servo", hSlideIndex);
             telemetry.addLine("> Extension Left Servo");
             telemetry.addData("    - Position", robot.hSlideLeftServo.getPosition());
             telemetry.addLine("> Extension Right Servo");
@@ -482,6 +516,9 @@ public class PrimaryTeleOp extends OpMode {
             telemetry.addData("    - Right Rear (Power): ", robot.rightRear.getPower());
             telemetry.addLine();
             telemetry.addLine();
+            telemetry.addLine("| -------- CONTROL HUB -------- |");
+            telemetry.addData("Voltage", "%.2f V", hardwareMap.voltageSensor.iterator().next().getVoltage());
+            telemetry.addLine();
             telemetry.addLine("| -------- GAMEPAD 1 -------- |");
             telemetry.addLine("> Buttons");
             telemetry.addData("    - Cross:", robot.currentGamepad1.cross);
@@ -502,7 +539,6 @@ public class PrimaryTeleOp extends OpMode {
             telemetry.addLine("> Joysticks");
             telemetry.addData("    - Left Joystick (x, y, click)", "(" + robot.currentGamepad1.left_stick_x + ", " + robot.currentGamepad1.left_stick_y + ", " + robot.currentGamepad1.left_stick_button + ")");
             telemetry.addData("    - Right Joystick (x, y, click)", "(" + robot.currentGamepad1.right_stick_x + ", " + robot.currentGamepad1.right_stick_y + ", " + robot.currentGamepad1.right_stick_button + ")");
-
         }
     }
 }
