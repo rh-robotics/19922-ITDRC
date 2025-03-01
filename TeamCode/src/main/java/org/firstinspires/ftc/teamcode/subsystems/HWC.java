@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import androidx.annotation.NonNull;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,10 +11,12 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.subsystems.roadrunner.drive.SampleMecanumDrive;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.subsystems.pid.components.MotorPIDComponent;
 import org.firstinspires.ftc.teamcode.subsystems.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.pid.components.MotorPIDComponent;
+import org.firstinspires.ftc.teamcode.subsystems.pid.components.ServoPIDComponent;
 
 public class HWC {
     // Motors
@@ -43,7 +46,7 @@ public class HWC {
 
     // Position Variables
     public static int[] vSlidePositions = {0, -600, -1300, -1850, -2800, -3900}; // (In order): Zero, Low Chamber, Side Panel Clearance, High Chamber, Low Basket, High Basket
-    public static int[] turretPositions = {350, 0, -350}; // (In order): Bucket Inwards, Initialize, Bucket Outwards
+    public static int[] turretPositions = {-350, 0}; // (In order): Bucket Inwards, Initialize, Bucket Outwards
     public static double[] hSlideLeftPositions = {0.9, 0.75, 0.2, 0}; // (In order): Retracted, Transfer, Halfway, Extension
     public static double[] hSlideRightPositions = {0.15, 0.35, 0.8, 1}; // (In order): Retracted, Transfer, Halfway, Extension
 
@@ -67,8 +70,8 @@ public class HWC {
         vSlideRightMotor = hardwareMap.get(DcMotorEx.class, "vSlideRightMotor"); // 223 RPM - 751.8 PPR
 
         // Motor PID Components
-        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, .7,751.8, 0.004, 0, 0, 0);
-        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, .7, 751.8, 0.004, 0, 0, 0);
+        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, 0.7,751.8, 0.004, 0, 0, 0);
+        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, 0.7, 751.8, 0.004, 0, 0, 0);
         turretComponent = new MotorPIDComponent(turretMotor, .4,1425.1, 0.003, 0, 0.0002, 0.0001);
 
         // CRServos

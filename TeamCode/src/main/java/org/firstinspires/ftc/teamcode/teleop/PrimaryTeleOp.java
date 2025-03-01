@@ -262,6 +262,8 @@ public class PrimaryTeleOp extends OpMode {
                                 intakeState = IntakeState.OUTTAKE;
                             } else {
                                 intakeState = IntakeState.STOPPED;
+                                intakeSwingPosition = IntakeSwingPosition.TRANSFER;
+                                hSlideIndex = 1; // Transfer Position
                             }
 
                             break;
@@ -270,6 +272,8 @@ public class PrimaryTeleOp extends OpMode {
                                 intakeState = IntakeState.OUTTAKE;
                             } else {
                                 intakeState = IntakeState.STOPPED;
+                                intakeSwingPosition = IntakeSwingPosition.TRANSFER;
+                                hSlideIndex = 1; // Transfer Position
                             }
 
                             break;
@@ -280,6 +284,8 @@ public class PrimaryTeleOp extends OpMode {
                                 intakeState = IntakeState.OUTTAKE;
                             } else {
                                 intakeState = IntakeState.STOPPED;
+                                intakeSwingPosition = IntakeSwingPosition.TRANSFER;
+                                hSlideIndex = 1; // Transfer Position
                             }
 
                             break;
@@ -294,6 +300,8 @@ public class PrimaryTeleOp extends OpMode {
                                 intakeState = IntakeState.OUTTAKE;
                             } else {
                                 intakeState = IntakeState.STOPPED;
+                                intakeSwingPosition = IntakeSwingPosition.TRANSFER;
+                                hSlideIndex = 1; // Transfer Position
                             }
 
                             break;
@@ -302,6 +310,8 @@ public class PrimaryTeleOp extends OpMode {
                                 intakeState = IntakeState.OUTTAKE;
                             } else {
                                 intakeState = IntakeState.STOPPED;
+                                intakeSwingPosition = IntakeSwingPosition.TRANSFER;
+                                hSlideIndex = 1; // Transfer Position
                             }
 
                             break;
@@ -312,6 +322,8 @@ public class PrimaryTeleOp extends OpMode {
                                 intakeState = IntakeState.OUTTAKE;
                             } else {
                                 intakeState = IntakeState.STOPPED;
+                                intakeSwingPosition = IntakeSwingPosition.TRANSFER;
+                                hSlideIndex = 1; // Transfer Position
                             }
 
                             break;
@@ -378,7 +390,7 @@ public class PrimaryTeleOp extends OpMode {
 
                 break;
             case DELIVERY:
-                robot.turretComponent.setTarget(HWC.turretPositions[2]);
+                robot.turretComponent.setTarget(HWC.turretPositions[0]); // TODO: Change to actual delivery value index, locking to specimen for match
 
                 break;
             case INIT:
@@ -440,11 +452,11 @@ public class PrimaryTeleOp extends OpMode {
 
         switch (clawPosition) {
             case OPEN:
-                robot.specimenClawServo.setPosition(0.8);
+                robot.specimenClawServo.setPosition(0.3);
 
                 break;
             case CLOSED:
-                robot.specimenClawServo.setPosition(0.5);
+                robot.specimenClawServo.setPosition(0.55);
 
                 break;
         }
