@@ -55,17 +55,19 @@ public class ScoreSpecimen extends OpMode {
     public void loop() {
         robot.vSlideLeftComponent.moveUsingPID();
         robot.vSlideRightComponent.moveUsingPID();
+        robot.turretComponent.moveUsingPID();
 
         telemetry.addLine("start");
         telemetry.addLine("Pos: " + robot.vSlideRightComponent.getPosition());
         telemetry.addLine("Tar: " + robot.vSlideRightComponent.getTarget());
 
-        // Precondition: turret is in the right position
         if (robot.vSlideRightComponent.closeEnough(50) && robot.vSlideRightComponent.getTarget() == HWC.vSlidePositions[3] &&
                 robot.turretComponent.closeEnough(50)) {
             telemetry.addLine("1");
             robot.vSlideLeftComponent.setTarget(HWC.vSlidePositions[2]);
             robot.vSlideRightComponent.setTarget(HWC.vSlidePositions[2]);
+
+            robot.turretComponent.setTarget(HWC.turretPositions[0]);
         } else if (robot.vSlideLeftComponent.getTarget() == HWC.vSlidePositions[2] &&
                 robot.vSlideLeftComponent.closeEnough(450)) {
             telemetry.addLine("2");

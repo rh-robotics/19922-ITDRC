@@ -44,8 +44,8 @@ public class HWC {
     // Position Variables
     public static int[] vSlidePositions = {0, -600, -1300, -1850, -2800, -3900}; // (In order): Zero, Low Chamber, Side Panel Clearance, High Chamber, Low Basket, High Basket
     public static int[] turretPositions = {350, 0, -350}; // (In order): Bucket Inwards, Initialize, Bucket Outwards
-    public static double[] hSlideLeftPositions = {0.9, 0.75, 0.5, 0}; // (In order): Retracted, Transfer, Halfway, Extension
-    public static double[] hSlideRightPositions = {0.15, 0.35, 0.5, 1}; // (In order): Retracted, Transfer, Halfway, Extension
+    public static double[] hSlideLeftPositions = {0.9, 0.75, 0.2, 0}; // (In order): Retracted, Transfer, Halfway, Extension
+    public static double[] hSlideRightPositions = {0.15, 0.35, 0.8, 1}; // (In order): Retracted, Transfer, Halfway, Extension
 
     // Other Variables
     Telemetry telemetry;

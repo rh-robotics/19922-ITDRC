@@ -36,8 +36,8 @@ public class PickUpSample extends OpMode {
     public void start() {
         robot.time.reset();
 
-        robot.hSlideLeftServo.setPosition(HWC.hSlideLeftPositions[3]);
-        robot.hSlideRightServo.setPosition(HWC.hSlideRightPositions[3]); // out
+        robot.hSlideLeftServo.setPosition(HWC.hSlideLeftPositions[2]);
+        robot.hSlideRightServo.setPosition(HWC.hSlideRightPositions[2]); // out
 
         robot.swingServoLeft.setPosition(0.5); // Intake
         robot.swingServoRight.setPosition(0.5);
@@ -52,26 +52,37 @@ public class PickUpSample extends OpMode {
 
     @Override
     public void loop() {
+        telemetry.addLine("Position: " + robot.hSlideLeftServo.getPosition());
+        telemetry.addLine("Target: " + HWC.hSlideLeftPositions[2]);
+        telemetry.addLine("Distance: " + robot.intakeColorSensor.getDistance(DistanceUnit.CM));
+        telemetry.addLine("Time: " + robot.time.time());
+        telemetry.addLine("Marker: " + waitMarker);
+
         if (robot.time.time() - waitMarker < 1) {
+            telemetry.addLine("Waiting!");
             return;
         }
 
-        if (robot.hSlideLeftServo.getPosition() == HWC.hSlideLeftPositions[2] && robot.intakeColorSensor.getDistance(DistanceUnit.CM) < 2 &&
-                robot.hSlideRightServo.getPosition() == HWC.hSlideRightPositions[2]) {
+        if (robot.hSlideLeftServo.getPosition() == HWC.hSlideLeftPositions[2] &&
+                robot.intakeColorSensor.getDistance(DistanceUnit.CM) < 2) {
+            telemetry.addLine("1");
+
             robot.swingServoLeft.setPosition(0.15); // transfer
             robot.swingServoRight.setPosition(0.85);
 
             robot.hSlideLeftServo.setPosition(HWC.hSlideLeftPositions[1]);
             robot.hSlideRightServo.setPosition(HWC.hSlideRightPositions[1]); // in
 
-            waitMarker = robot.time.time(); // 1s wait
+            robot.intakeServo1.setPower(0);
+            robot.intakeServo2.setPower(0);
 
-        } else if (robot.hSlideRightServo.getPosition() == 1) {
+            waitMarker = robot.time.time(); // 1s wait
+        } else if (robot.hSlideLeftServo.getPosition() == HWC.hSlideLeftPositions[1] && robot.intakeServo1.getPower() != -1) {
+            telemetry.addLine("2");
             robot.intakeServo1.setPower(-1);
-            robot.intakeServo2.setPower(-1);
-
-            waitMarker = robot.time.time(); // 1s wait
-
+            robot.intakeServo2.setPower(1);
+        } else if (robot.hSlideLeftServo.getPosition() == HWC.hSlideLeftPositions[1] &&
+                robot.intakeServo1.getPower() == -1 && robot.intakeColorSensor.getDistance(DistanceUnit.CM) > 2) {
             requestOpModeStop();
         }
     }
