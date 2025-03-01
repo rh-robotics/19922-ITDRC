@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pid.components.ServoPIDComponen
 public class HWC {
     // Motors
     public DcMotorEx leftFront, rightFront, leftRear, rightRear;
-    public DcMotorEx turretMotor, linearActuatorMotor, vSlideLeftMotor, vSlideRightMotor;
+    public DcMotorEx turretMotor, vSlideLeftMotor, vSlideRightMotor;
 
     // Motor PID Components
     public MotorPIDComponent vSlideLeftComponent, vSlideRightComponent, turretComponent;
@@ -45,9 +45,10 @@ public class HWC {
     public ElapsedTime time = new ElapsedTime();
 
     // Position Variables
-    public static int[] vSlidePositions = {0, -600, -1300, -1850, -2800, }; // (In order): Zero, Low Chamber, Side Panel Clearance, High Chamber, Low Basket, High Basket
-    public static int[] hSlidePositions = {0, 0}; // TODO: Update with actual values
-    public static int[] turretPositions = {350, 0, -350};
+    public static int[] vSlidePositions = {0, -600, -1300, -1850, -2800, -3900}; // (In order): Zero, Low Chamber, Side Panel Clearance, High Chamber, Low Basket, High Basket
+    public static int[] turretPositions = {-350, 0}; // (In order): Bucket Inwards, Initialize, Bucket Outwards
+    public static double[] hSlideLeftPositions = {0.9, 0.75, 0.2, 0}; // (In order): Retracted, Transfer, Halfway, Extension
+    public static double[] hSlideRightPositions = {0.15, 0.35, 0.8, 1}; // (In order): Retracted, Transfer, Halfway, Extension
 
     // Other Variables
     Telemetry telemetry;
@@ -63,13 +64,12 @@ public class HWC {
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
         turretMotor = hardwareMap.get(DcMotorEx.class, "turretMotor"); // 117 RPM
-        linearActuatorMotor = hardwareMap.get(DcMotorEx.class, "linearActuatorMotor");
         vSlideLeftMotor = hardwareMap.get(DcMotorEx.class, "vSlideLeftMotor"); // 223 RPM - 751.8 PPR
         vSlideRightMotor = hardwareMap.get(DcMotorEx.class, "vSlideRightMotor"); // 223 RPM - 751.8 PPR
 
         // Motor PID Components
-        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, 751.8, 0.004, 0, 0, 0);
-        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, 751.8, 0.004, 0, 0, 0);
+        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, 0.7,751.8, 0.004, 0, 0, 0);
+        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, 0.7, 751.8, 0.004, 0, 0, 0);
         turretComponent = new MotorPIDComponent(turretMotor, .4,1425.1, 0.003, 0, 0.0002, 0.0001);
 
         // CRServos
@@ -98,7 +98,6 @@ public class HWC {
         vSlideRightMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         vSlideLeftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         turretMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        linearActuatorMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         // Run ALL motors without encoders
         leftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
@@ -106,7 +105,6 @@ public class HWC {
         leftRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         rightRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         turretMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        linearActuatorMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         vSlideLeftMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         vSlideRightMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     }
