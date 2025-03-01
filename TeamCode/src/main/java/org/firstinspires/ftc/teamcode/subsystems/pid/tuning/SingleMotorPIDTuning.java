@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.subsystems.HWC;
 
@@ -64,7 +65,7 @@ public class SingleMotorPIDTuning extends OpMode {
         ff = Math.cos(Math.toRadians(target / TICKS_IN_DEGREES)) * f;
 
         // Set motor power
-        motor.setPower(pid + ff);
+        motor.setPower(Range.clip(pid + ff, -0.4, 0.4));
 
         // Update telemetry
         telemetry.addData("Motor Position", pos);

@@ -46,9 +46,9 @@ public class HWC {
 
     // Position Variables
     public static int[] vSlidePositions = {0, -600, -1300, -1850, -2800, -3900}; // (In order): Zero, Low Chamber, Side Panel Clearance, High Chamber, Low Basket, High Basket
-    public static int[] turretPositions = {350, 0, -350}; // (In order): Bucket Inwards, Initialize, Bucket Outwards
-    public static double[] hSlideLeftPositions = {0.9, 0.75, 0.5, 0}; // (In order): Retracted, Transfer, Halfway, Extension
-    public static double[] hSlideRightPositions = {0.15, 0.35, 0.5, 1}; // (In order): Retracted, Transfer, Halfway, Extension
+    public static int[] turretPositions = {-350, 0}; // (In order): Bucket Inwards, Initialize, Bucket Outwards
+    public static double[] hSlideLeftPositions = {0.9, 0.75, 0.2, 0}; // (In order): Retracted, Transfer, Halfway, Extension
+    public static double[] hSlideRightPositions = {0.15, 0.35, 0.8, 1}; // (In order): Retracted, Transfer, Halfway, Extension
 
     // Other Variables
     Telemetry telemetry;
@@ -68,8 +68,8 @@ public class HWC {
         vSlideRightMotor = hardwareMap.get(DcMotorEx.class, "vSlideRightMotor"); // 223 RPM - 751.8 PPR
 
         // Motor PID Components
-        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, 751.8, 0.004, 0, 0, 0);
-        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, 751.8, 0.004, 0, 0, 0);
+        vSlideLeftComponent = new MotorPIDComponent(vSlideLeftMotor, 0.7,751.8, 0.004, 0, 0, 0);
+        vSlideRightComponent = new MotorPIDComponent(vSlideRightMotor, 0.7, 751.8, 0.004, 0, 0, 0);
         turretComponent = new MotorPIDComponent(turretMotor, .4,1425.1, 0.003, 0, 0.0002, 0.0001);
 
         // CRServos
